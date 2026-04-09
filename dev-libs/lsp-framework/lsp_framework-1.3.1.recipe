@@ -1,0 +1,77 @@
+SUMMARY="Language Server Protocol implementation in C++"
+DESCRIPTION="This is an implementation of the Language Server Protocol in C++. \
+It can be used to implement both servers and clients that communicate using the LSP."
+HOMEPAGE="https://github.com/leon-bckl/lsp-framework/"
+COPYRIGHT="2025 Leon Buckel.  All Rights Reserved."
+LICENSE="MIT"
+REVISION="1"
+SOURCE_URI="https://github.com/leon-bckl/lsp-framework/archive/refs/tags/$portVersion.tar.gz"
+CHECKSUM_SHA256="f5c53e85c407d3773c7b917f4cab777da12d4059a5aeb2dbc3ec656fa7842569"
+SOURCE_FILENAME="lsp_framework-$portVersion.tar.gz"
+SOURCE_DIR="lsp-framework-$portVersion"
+
+ARCHITECTURES="all"
+SECONDARY_ARCHITECTURES="x86"
+
+commandBinDir=$binDir
+commandSuffix=$secondaryArchSuffix
+if [ "$targetArchitecture" = x86_gcc2 ]; then
+	commandSuffix=
+	commandBinDir=$prefix/bin
+fi
+
+libVersion="$portVersion"
+libVersionCompat="$libVersion compat >= ${libVersion%%.*}"
+
+PROVIDES="
+	liblsp$secondaryArchSuffix = $portVersion
+	lib:liblsp$secondaryArchSuffix = $libVersionCompat
+	cmd:lspgen$secondaryArchSuffix = $portVersion
+	"
+
+REQUIRES="
+	haiku$secondaryArchSuffix
+	"
+
+PROVIDES_devel="
+	liblsp${secondaryArchSuffix}_devel = $portVersion
+	devel:liblsp$secondaryArchSuffix = $libVersionCompat
+	"
+
+REQUIRES_devel="
+	liblsp$secondaryArchSuffix == $portVersion base
+	"
+
+BUILD_REQUIRES="
+	haiku${secondaryArchSuffix}_devel
+	"
+
+BUILD_PREREQUIRES="
+	cmd:cmake
+	cmd:make
+	cmd:gcc$secondaryArchSuffix
+	"
+
+BUILD()
+{
+	cmake -B build -S . \
+		$cmakeDirArgs \
+		-DCMAKE_BUILD_TYPE=Release \
+		-DCMAKE_INSTALL_BINDIR=$commandBinDir
+
+	cmake --build build --parallel
+}
+
+INSTALL()
+{
+		cmake --install build
+
+		prepareInstalledDevelLib \
+			liblsp
+		fixPkgconfig
+
+		packageEntries devel \
+			$developDir \
+			$libDir/cmake
+}
+
