@@ -26,20 +26,10 @@ libVersionCompat="$libVersion compat >= ${libVersion%%.*}"
 PROVIDES="
 	liblsp$secondaryArchSuffix = $portVersion
 	lib:liblsp$secondaryArchSuffix = $libVersionCompat
-	cmd:lspgen$secondaryArchSuffix = $portVersion
 	"
 
 REQUIRES="
 	haiku$secondaryArchSuffix
-	"
-
-PROVIDES_devel="
-	liblsp${secondaryArchSuffix}_devel = $portVersion
-	devel:liblsp$secondaryArchSuffix = $libVersionCompat
-	"
-
-REQUIRES_devel="
-	liblsp$secondaryArchSuffix == $portVersion base
 	"
 
 BUILD_REQUIRES="
@@ -70,7 +60,7 @@ INSTALL()
 			liblsp
 		fixPkgconfig
 
-		packageEntries devel \
+		packageEntries \
 			$developDir \
 			$libDir/cmake
 }
