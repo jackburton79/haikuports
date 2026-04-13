@@ -2,7 +2,7 @@ SUMMARY="Language Server Protocol implementation in C++"
 DESCRIPTION="This is an implementation of the Language Server Protocol in C++. \
 It can be used to implement both servers and clients that communicate using the LSP."
 HOMEPAGE="https://github.com/leon-bckl/lsp-framework/"
-COPYRIGHT="2025 Leon Buckel.  All Rights Reserved."
+COPYRIGHT="2025 Leon Buckel."
 LICENSE="MIT"
 REVISION="1"
 SOURCE_URI="https://github.com/leon-bckl/lsp-framework/archive/refs/tags/$portVersion.tar.gz"
@@ -13,11 +13,9 @@ SOURCE_DIR="lsp-framework-$portVersion"
 ARCHITECTURES="all !x86_gcc2"
 SECONDARY_ARCHITECTURES="x86 "
 
-libVersion="$portVersion"
-
 PROVIDES="
-	liblsp$secondaryArchSuffix = $portVersion
-	lib:liblsp$secondaryArchSuffix = $libVersion
+	lsp_framework$secondaryArchSuffix = $portVersion
+	devel:liblsp$secondaryArchSuffix
 	"
 REQUIRES="
 	haiku$secondaryArchSuffix
@@ -26,7 +24,6 @@ REQUIRES="
 BUILD_REQUIRES="
 	haiku${secondaryArchSuffix}_devel
 	"
-
 BUILD_PREREQUIRES="
 	cmd:cmake
 	cmd:make
