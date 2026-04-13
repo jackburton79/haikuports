@@ -10,24 +10,15 @@ CHECKSUM_SHA256="f5c53e85c407d3773c7b917f4cab777da12d4059a5aeb2dbc3ec656fa784256
 SOURCE_FILENAME="lsp_framework-$portVersion.tar.gz"
 SOURCE_DIR="lsp-framework-$portVersion"
 
-ARCHITECTURES="all"
-SECONDARY_ARCHITECTURES="x86"
-
-commandBinDir=$binDir
-commandSuffix=$secondaryArchSuffix
-if [ "$targetArchitecture" = x86_gcc2 ]; then
-	commandSuffix=
-	commandBinDir=$prefix/bin
-fi
+ARCHITECTURES="all !x86_gcc2"
+SECONDARY_ARCHITECTURES="x86 "
 
 libVersion="$portVersion"
-libVersionCompat="$libVersion compat >= ${libVersion%%.*}"
 
 PROVIDES="
 	liblsp$secondaryArchSuffix = $portVersion
-	lib:liblsp$secondaryArchSuffix = $libVersionCompat
+	lib:liblsp$secondaryArchSuffix = $libVersion
 	"
-
 REQUIRES="
 	haiku$secondaryArchSuffix
 	"
@@ -46,8 +37,7 @@ BUILD()
 {
 	cmake -B build -S . \
 		$cmakeDirArgs \
-		-DCMAKE_BUILD_TYPE=Release \
-		-DCMAKE_INSTALL_BINDIR=$commandBinDir
+		-DCMAKE_BUILD_TYPE=Release
 
 	cmake --build build --parallel
 }
@@ -58,6 +48,5 @@ INSTALL()
 
 		prepareInstalledDevelLib \
 			liblsp
-		fixPkgconfig
 }
 
